@@ -47,18 +47,26 @@ namespace KeyBinder
             InitializeComponent();
 
             setSystemTrayProperties();
+
+            minimizeOnStartUp();
+        }
+
+        private void minimizeOnStartUp()
+        {
+            this.WindowState = System.Windows.WindowState.Minimized;
+            OnStateChanged(null, null);
         }
 
         private void setSystemTrayProperties()
         {
             _notifyIcon = new System.Windows.Forms.NotifyIcon();
-            _notifyIcon.Icon = new System.Drawing.Icon("Resources/keyboard-st.ico");            
+            _notifyIcon.Icon = new System.Drawing.Icon("Resources/keyboard-24x24.ico");            
             _notifyIcon.MouseClick += new System.Windows.Forms.MouseEventHandler(NotifyIcon_Click);
             //m_notifyIcon.BalloonTipText = "The app has been minimised. Click the tray icon to show.";
             _notifyIcon.BalloonTipTitle = "KeyBinder";
             _notifyIcon.Text = "KeyBinder";
             _notifyIcon.ContextMenuStrip = new System.Windows.Forms.ContextMenuStrip();
-            _notifyIcon.ContextMenuStrip.Items.Add("Exit", System.Drawing.Image.FromFile("Resources/keyboard-st.ico"), OnExitClicked);
+            _notifyIcon.ContextMenuStrip.Items.Add("Exit", System.Drawing.Image.FromFile("Resources/keyboard-24x24.ico"), OnExitClicked);
         }
 
         private void OnExitClicked(object sender, EventArgs e)

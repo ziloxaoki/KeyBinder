@@ -141,5 +141,15 @@
   <ItemGroup>
     <Resource Include="keyboard.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Keyboard-24x24.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Keyboard-16x16.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
