@@ -1,0 +1,19 @@
+﻿<Window x:Class="KeyBinder.EditArguments"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:KeyBinder"
+        mc:Ignorable="d"
+        Title="Edit Arguments" Height="136.364" Width="644.385" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Closing="Window_Closing">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="365*"/>
+            <ColumnDefinition Width="31*"/>
+        </Grid.ColumnDefinitions>
+        <Label x:Name="argumentsLabel" Content="Arguments:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="argumentsTextBox" Text="{Binding arguments, UpdateSourceTrigger=PropertyChanged}"  HorizontalAlignment="Left" Height="23" Margin="81,13,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="532" FontWeight="Bold" FontStyle="Italic" FontSize="16" Grid.ColumnSpan="2"/>
+        <Button x:Name="updateButton" Content="Update" HorizontalAlignment="Left" Margin="274,51,0,0" VerticalAlignment="Top" Width="90" RenderTransformOrigin="0.404,0.143" Height="21" Click="SaveButton_Click"/>
+
+    </Grid>
+</Window>
