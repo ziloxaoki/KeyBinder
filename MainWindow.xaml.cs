@@ -9,6 +9,7 @@ using System.Windows.Data;
 using System.Collections.Generic;
 using System.Linq;
 using System.Collections.ObjectModel;
+using System.Windows.Threading;
 
 namespace KeyBinder
 {
@@ -40,11 +41,11 @@ namespace KeyBinder
                 }))
             };
 
-            this.DataContext = this.viewModel;            
-            
-            startThreads(tokenSource.Token);
+            this.DataContext = this.viewModel;
 
             InitializeComponent();
+
+            startThreads(tokenSource.Token);
 
             setSystemTrayProperties();
 
@@ -53,8 +54,20 @@ namespace KeyBinder
 
         private void minimizeOnStartUp()
         {
-            this.WindowState = System.Windows.WindowState.Minimized;
-            OnStateChanged(null, null);
+            this.Hide();
+            changeWindowStateDelegate(WindowState.Minimized);
+            this.ShowInTaskbar = false;
+            _notifyIcon.Visible = true;            
+        }
+
+        private void changeWindowStateDelegate(WindowState state)
+        {
+            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background,
+                new Action(delegate ()
+                {
+                    this.WindowState = state;
+                })
+            );
         }
 
         private void setSystemTrayProperties()
@@ -75,11 +88,12 @@ namespace KeyBinder
         }
 
         private void NotifyIcon_Click(object sender, EventArgs e)
-        {
+        {            
             if (((System.Windows.Forms.MouseEventArgs)e).Button == System.Windows.Forms.MouseButtons.Left)
             {
-                WindowState = WindowState.Normal;
+                changeWindowStateDelegate(WindowState.Normal);
                 this.Activate();
+                this.Show();
             }
         }
 
@@ -93,12 +107,14 @@ namespace KeyBinder
         {
             _notifyIcon.Dispose();
             _notifyIcon = null;
+            tokenSource.Cancel();
         }
 
         void OnStateChanged(object sender, EventArgs args)
         {
-            if (WindowState == WindowState.Minimized)
+            if (this.WindowState == WindowState.Minimized)
             {
+                this.Hide();
                 this.ShowInTaskbar = false;
                 _notifyIcon.Visible = true;
                 //if (m_notifyIcon != null)
@@ -114,21 +130,14 @@ namespace KeyBinder
 
         void m_notifyIcon_Click(object sender, EventArgs e)
         {
-            WindowState = WindowState.Normal;
+            changeWindowStateDelegate(WindowState.Normal);
+            this.Activate();
         }
 
         void ShowTrayIcon(bool show)
         {
             if (_notifyIcon != null)
                 _notifyIcon.Visible = show;
-        }
-
-        protected override void OnClosing(CancelEventArgs e)
-        {
-            Console.WriteLine("Closing main window...");
-            _notifyIcon.Dispose();
-            _notifyIcon = null;
-            tokenSource.Cancel();
         }
 
         private void DataGridCell_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -154,12 +163,25 @@ namespace KeyBinder
         {
             if (Utils.isHotkeyDuplicatted(viewModel))
             {
-                MessageBox.Show("Please remove duplicated hotkeys before saving.", "Error Saving!!!", MessageBoxButton.OK, MessageBoxImage.Error);
+                System.Windows.Forms.MessageBox.Show("Please remove duplicated hotkeys before saving.", 
+                    "Error Saving!!!", 
+                    System.Windows.Forms.MessageBoxButtons.OK, 
+                    System.Windows.Forms.MessageBoxIcon.Error);
                 return;
             }
-            FileManager.saveDataToFile(viewModel);
-            MessageBox.Show("Changes saved to file");
-            cleanEmptyRows();
+
+            System.Windows.Forms.DialogResult dr = System.Windows.Forms.MessageBox.Show("Program will have to be restarted. Do you wish to continue?", 
+                "", 
+                System.Windows.Forms.MessageBoxButtons.YesNo, 
+                System.Windows.Forms.MessageBoxIcon.Warning);
+
+            if (dr == System.Windows.Forms.DialogResult.Yes)
+            {
+                FileManager.saveDataToFile(viewModel);
+                System.Windows.Forms.MessageBox.Show("Changes saved to file");
+                System.Diagnostics.Process.Start(Application.ResourceAssembly.Location);
+                Application.Current.Shutdown();
+            }            
         }
 
         private Hotkey addNewItem()

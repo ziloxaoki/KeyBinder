@@ -10,8 +10,10 @@
         <Label x:Name="hotkeyLabel" Content="Hotkey:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.593,1.282"/>
         <TextBox x:Name="hotkeyTextBox" Text="{Binding hotkey, UpdateSourceTrigger=PropertyChanged}"  
                  HorizontalAlignment="Left" Height="23" Margin="84,13,0,0" TextWrapping="Wrap" VerticalAlignment="Top"  
-                 FontWeight="Bold" FontStyle="Italic" FontSize="16"
-                 KeyDown="HotkeyTextBox_KeyDown" Width="200" />
+                 FontWeight="Bold" FontStyle="Italic" FontSize="16" Width="565"
+                 KeyDown="HotkeyTextBox_KeyDown"
+                 KeyUp="HotkeyTextBox_KeyUp"
+                 />
         <Label x:Name="fileLabel" Content="File:" HorizontalAlignment="Left" Margin="10,46,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="fileTextBox" Text="{Binding file, UpdateSourceTrigger=PropertyChanged}"  HorizontalAlignment="Left" Height="23" Margin="84,49,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="565" FontWeight="Bold" FontStyle="Italic" FontSize="16"/>
         <Button x:Name="selectFileButton" VerticalAlignment="Top" Width="29" Height="23" Click="SelectFileButton_Click" Margin="654,49,60,0" HorizontalAlignment="Left">

@@ -29,7 +29,18 @@ namespace KeyBinder
 
         public override bool Equals(object obj)
         {
-            return base.Equals(obj);
+            if ((obj == null) || !this.GetType().Equals(obj.GetType()))
+            {
+                return false;
+            }
+            else
+            {
+                Hotkey h = (Hotkey)obj;
+                return this.hotkey.Equals(h.hotkey) && 
+                    this.file.Equals(h.file) && 
+                    this.arguments.Equals(h.arguments) && 
+                    this.description.Equals(h.description);
+            }
         }
     }
 }

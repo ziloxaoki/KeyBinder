@@ -24,6 +24,9 @@ namespace KeyBinder
 
         private HashSet<Key> PressedKeys = new HashSet<Key>();
 
+        private static readonly Key[] INVALID_KEYS = new Key[] { Key.Back, Key.Enter, Key.LWin, Key.Apps, Key.Escape, Key.CapsLock,
+            Key.LineFeed, Key.System, Key.DeadCharProcessed };
+
         /// <summary>
         /// This functions scans currently pressed keys and returns them. Every key is returned just once. If the key is still pressed during second
         /// method call, it is not returned. It's returned again after the key is released and pressed again.
@@ -45,7 +48,7 @@ namespace KeyBinder
                 {
                     PressedKeys.Remove(key);
                 }                    
-                else if (down && !PressedKeys.Contains(key)) // The key is pressed, but wasn't pressed before - it will be returned
+                else if (down && !PressedKeys.Contains(key) && !INVALID_KEYS.Contains(key)) // The key is pressed, but wasn't pressed before - it will be returned
                 {
                     PressedKeys.Add(key);
                 }

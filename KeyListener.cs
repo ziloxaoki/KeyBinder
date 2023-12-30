@@ -78,10 +78,7 @@ namespace KeyBinder
 
         public void processKeys(HashSet<Key> pressedKeys)
         {
-            if (pressedKeys.Count > 1)
-            {
-                processor.addHotkey(Utils.converKeysToHotkeyString(pressedKeys));                
-            }
+            processor.addHotkey(Utils.converKeysToHotkeyString(pressedKeys));                
         }
     }
 }

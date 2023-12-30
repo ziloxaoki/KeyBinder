@@ -25,6 +25,8 @@ namespace KeyBinder
         private Hotkey oldValue = new Hotkey();
         private ViewModel viewModel;
 
+        private HashSet<Key> pressedKeys;
+
         public EditHotkey(ViewModel viewModel)
         {
             InitializeComponent();
@@ -70,7 +72,7 @@ namespace KeyBinder
 
         private void HotkeyTextBox_KeyDown(object sender, KeyEventArgs e)
         {
-            HashSet<Key> pressedKeys = new HashSet<Key>();
+            pressedKeys = new HashSet<Key>();
             try
             {
                 pressedKeys = dataSource.GetPressedKeys();
@@ -85,6 +87,14 @@ namespace KeyBinder
             {
                 hotkeyTextBox.Text = Utils.converKeysToHotkeyString(pressedKeys);
             }            
+        }
+
+        private void HotkeyTextBox_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (pressedKeys.Any())
+            {
+                hotkeyTextBox.Text = Utils.converKeysToHotkeyString(pressedKeys);
+            }
         }
 
         private void SelectFileButton_Click(object sender, RoutedEventArgs e)

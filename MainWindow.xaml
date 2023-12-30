@@ -6,9 +6,7 @@
         xmlns:local="clr-namespace:KeyBinder"
         mc:Ignorable="d"
         Title="KeyBinder" Height="559" Width="1056" WindowStartupLocation="CenterScreen" Icon="Properties/keyboard-st.ico"
-        Closing="OnClose" StateChanged="OnStateChanged" Background="#FFCEE191"
-        ShowInTaskbar="{Binding ShowInTaskbar}"
-        WindowState="{Binding WindowState}"
+        Closing="OnClose" Background="#FFCEE191" StateChanged="OnStateChanged"
         >
     <Grid Margin="0,0,34,4">
         <DataGrid x:Name="dataGrid" 

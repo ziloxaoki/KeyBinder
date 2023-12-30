@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -18,7 +19,6 @@ namespace KeyBinder
         private readonly Object lockIt = new Object();        
         CancellationToken token;
 
-
         public HotkeyProcessor(CancellationToken token, ViewModel viewModel)
         {
             this.token = token;
@@ -30,7 +30,7 @@ namespace KeyBinder
                         arguments = entry.arguments,
                         description = entry.description,
                     }).ToList());
-        }        
+        }
 
         public async void StartProcessorAsync()
         {
@@ -64,14 +64,15 @@ namespace KeyBinder
                         }
 
                         //sleep for 3s to avoid user triggering same shortcut several times
-                        Thread.Sleep(3000);
+                        Thread.Sleep(1000);                        
+                    }
 
-                        lock (lockIt)
-                        {
-                            processes.Remove(hotkeyObj.hotkey);
-                        }
+                    lock (lockIt)
+                    {
+                        processes.Remove(hotkeyStr);
                     }
                 }
+
                 Thread.Sleep(200);
             }
             Console.WriteLine("Closing thread HotkeyProcessor...");
