@@ -63,7 +63,7 @@ namespace KeyBinder
                         return;
                     }
 
-                    if (pressedKeys.Any())
+                    if (pressedKeys.Any() && pressedKeys.Count > 1)
                     {
                         processKeys(pressedKeys);
                     }
