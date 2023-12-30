@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Windows.Input;
 using System.Threading;
 using System.Threading.Tasks;
+using static KeyBinder.MainWindow;
 
 namespace KeyBinder
 {
@@ -16,9 +17,9 @@ namespace KeyBinder
         HotkeyProcessor processor;
         CancellationToken token;
 
-        public KeyListener(CancellationToken token, ViewModel viewModel)
+        public KeyListener(CancellationToken token, ViewModel viewModel, CallbackNotifyUser notifyUser)
         {
-            processor = new HotkeyProcessor(token, viewModel);
+            processor = new HotkeyProcessor(token, viewModel, notifyUser);
             this.token = token;
         }
 
@@ -63,7 +64,7 @@ namespace KeyBinder
                         return;
                     }
 
-                    if (pressedKeys.Any() && pressedKeys.Count > 1)
+                    if (pressedKeys.Any())
                     {
                         processKeys(pressedKeys);
                     }
@@ -78,7 +79,10 @@ namespace KeyBinder
 
         public void processKeys(HashSet<Key> pressedKeys)
         {
-            processor.addHotkey(Utils.converKeysToHotkeyString(pressedKeys));                
+            if (pressedKeys.Count > 1)
+            {
+                processor.addHotkey(Utils.converKeysToHotkeyString(pressedKeys));
+            }
         }
     }
 }

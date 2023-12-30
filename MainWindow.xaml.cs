@@ -19,10 +19,11 @@ namespace KeyBinder
 
     public partial class MainWindow : Window
     {
-        private System.Windows.Forms.NotifyIcon _notifyIcon;                
+        private static System.Windows.Forms.NotifyIcon _notifyIcon;                
         private readonly ViewModel viewModel;
 
         protected CancellationTokenSource tokenSource = null;
+        public delegate void CallbackNotifyUser(string message);
 
         public MainWindow()
         {            
@@ -57,7 +58,7 @@ namespace KeyBinder
             this.Hide();
             changeWindowStateDelegate(WindowState.Minimized);
             this.ShowInTaskbar = false;
-            _notifyIcon.Visible = true;            
+            // _notifyIcon.Visible = true;            
         }
 
         private void changeWindowStateDelegate(WindowState state)
@@ -75,11 +76,12 @@ namespace KeyBinder
             _notifyIcon = new System.Windows.Forms.NotifyIcon();
             _notifyIcon.Icon = new System.Drawing.Icon("Resources/keyboard-24x24.ico");            
             _notifyIcon.MouseClick += new System.Windows.Forms.MouseEventHandler(NotifyIcon_Click);
-            //m_notifyIcon.BalloonTipText = "The app has been minimised. Click the tray icon to show.";
+            //_notifyIcon.BalloonTipText = "The app has been minimised. Click the tray icon to show.";
             _notifyIcon.BalloonTipTitle = "KeyBinder";
             _notifyIcon.Text = "KeyBinder";
             _notifyIcon.ContextMenuStrip = new System.Windows.Forms.ContextMenuStrip();
             _notifyIcon.ContextMenuStrip.Items.Add("Exit", System.Drawing.Image.FromFile("Resources/keyboard-24x24.ico"), OnExitClicked);
+            _notifyIcon.Visible = true;
         }
 
         private void OnExitClicked(object sender, EventArgs e)
@@ -99,7 +101,8 @@ namespace KeyBinder
 
         private async void startThreads(CancellationToken token)
         {
-            KeyListener keyListener = new KeyListener(token, viewModel);
+            CallbackNotifyUser notifyUser = DelegateNotifyUser;
+            KeyListener keyListener = new KeyListener(token, viewModel, notifyUser);
             await Task.Run(() => keyListener.StartMonitorAsync());
         }
 
@@ -116,13 +119,13 @@ namespace KeyBinder
             {
                 this.Hide();
                 this.ShowInTaskbar = false;
-                _notifyIcon.Visible = true;
+                //_notifyIcon.Visible = true;
                 //if (m_notifyIcon != null)
                 //    m_notifyIcon.ShowBalloonTip(2000);
             }
             else if (this.WindowState == WindowState.Normal)
             {
-                _notifyIcon.Visible = false;
+                //_notifyIcon.Visible = false;
                 this.ShowInTaskbar = true;
             }
 
@@ -132,12 +135,19 @@ namespace KeyBinder
         {
             changeWindowStateDelegate(WindowState.Normal);
             this.Activate();
-        }
+        } 
 
-        void ShowTrayIcon(bool show)
+        public static void DelegateNotifyUser(string message)
         {
-            if (_notifyIcon != null)
-                _notifyIcon.Visible = show;
+            Console.WriteLine(message);
+            if (!string.IsNullOrEmpty(message))
+            {
+                _notifyIcon.BalloonTipText = message;
+                if (_notifyIcon != null)
+                {
+                    _notifyIcon.ShowBalloonTip(2000);
+                }
+            }
         }
 
         private void DataGridCell_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)

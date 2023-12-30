@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using static KeyBinder.MainWindow;
 
 namespace KeyBinder
 {
@@ -19,8 +20,11 @@ namespace KeyBinder
         private readonly Object lockIt = new Object();        
         CancellationToken token;
 
-        public HotkeyProcessor(CancellationToken token, ViewModel viewModel)
+        CallbackNotifyUser notifyUser;
+
+        public HotkeyProcessor(CancellationToken token, ViewModel viewModel, CallbackNotifyUser notifyUser)
         {
+            this.notifyUser = notifyUser;
             this.token = token;
             listOfConfiguredHotkeys = new ObservableCollection<Hotkey>(
                 viewModel.DataGridItems.Select(
@@ -60,8 +64,10 @@ namespace KeyBinder
                             }
 
                             // Go
-                            p.Start();
+                            p.Start();                            
                         }
+
+                        notifyUser(String.Format("File {0} executed.", hotkeyObj.file));
 
                         //sleep for 3s to avoid user triggering same shortcut several times
                         Thread.Sleep(1000);                        

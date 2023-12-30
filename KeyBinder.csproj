@@ -152,4 +152,7 @@
     </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy /Y "$(TargetDir)$(ProjectName).exe" "C:\Program Files (x86)\KeyBinder\$(ProjectName).exe"</PostBuildEvent>
+  </PropertyGroup>
 </Project>
