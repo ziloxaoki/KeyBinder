@@ -86,15 +86,8 @@ namespace KeyBinder
             if (pressedKeys.Any())
             {
                 hotkeyTextBox.Text = Utils.converKeysToHotkeyString(pressedKeys);
-            }            
-        }
-
-        private void HotkeyTextBox_KeyUp(object sender, KeyEventArgs e)
-        {
-            if (pressedKeys.Any())
-            {
-                hotkeyTextBox.Text = Utils.converKeysToHotkeyString(pressedKeys);
             }
+            e.Handled = true;
         }
 
         private void SelectFileButton_Click(object sender, RoutedEventArgs e)
